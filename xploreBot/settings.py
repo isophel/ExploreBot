@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import dj_database_url
 import os
 from pathlib import Path
+import xploreBot.storage_backends
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -77,14 +80,20 @@ WSGI_APPLICATION = 'xploreBot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'xploreBot',
+#         'USER':'root',
+#         'PASSWORD':'Isandev2020.c0m',
+#         'HOST':'127.0.0.1',
+#         'PORT':'3306'
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'xploreBot',
-        'USER':'root',
-        'PASSWORD':'Isandev2020.c0m',
-        'HOST':'127.0.0.1',
-        'PORT':'3306'
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
     }
 }
 
