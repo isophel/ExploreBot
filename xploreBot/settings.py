@@ -97,8 +97,10 @@ WSGI_APPLICATION = 'xploreBot.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
+        'NAME': 'xploreBot',
     }
 }
+DATABASES['default'] =  dj_database_url.config()
 
 
 # Password validation
