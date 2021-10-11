@@ -12,7 +12,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-#import xploreBot.storages_backends
+import environ
+import xploreBot.storages_backends
+
+# Initialise environment variables
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,16 +30,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#p6ixk9b&^+n7z65dovch1844=l)c3dgx90(d@$h&@hg33!_e7'
+SECRET_KEY = env('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = [
-        '*',
-        'https://xplorebot.herokuapp.com',
-
-        ]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'xploreapi',
+    'storages',
     'rest_framework',
 ]
 
@@ -55,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -83,24 +88,24 @@ WSGI_APPLICATION = 'xploreBot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME':'xploreBot',
-#         'USER':'root',
-#         'PASSWORD':'Isandev2020.c0m',
-#         'HOST':'127.0.0.1',
-#         'PORT':'3306'
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': 'xploreBot',
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'xploreBot',
+        'USER':'root',
+        'PASSWORD':'Isandev2020.c0m',
+        'HOST':'127.0.0.1',
+        'PORT':'3306'
     }
 }
-DATABASES['default'] =  dj_database_url.config()
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         'NAME': 'xploreBot',
+#     }
+# }
+# DATABASES['default'] =  dj_database_url.config()
 
 
 # Password validation
@@ -145,13 +150,49 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'live', 'media')
-STATIC_ROOT = os.path.join(BASE_DIR,'live', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+
+if not DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, "static"),
+    )
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION = 'us-east-1'
+    AWS_S3_CUSTOM_DOMAIN = 's3.{}.amazonaws.com/{}'.format(AWS_S3_REGION, AWS_STORAGE_BUCKET_NAME)
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    AWS_LOCATION = 'static'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+    DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
+    # Allow all host hosts/domain names for this site
+    ALLOWED_HOSTS = ['*']
+
+    # # # Parse database configuration from $DATABASE_URL
+
+    DATABASES = {'default': dj_database_url.config()}
+
+    # # # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# # # try to load local_settings.py if it exists
+if DEBUG:
+    try:
+        from .local_settings import *
+    except Exception as e:
+        pass
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
