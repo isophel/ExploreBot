@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import dj_database_url
 import environ
-import xploreBot.storages_backends
+import xploreBot.storage_backends
 
 # Initialise environment variables
 env = environ.Env(
