@@ -19,7 +19,7 @@ import xploreBot.storage_backends
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
-)
+ )
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,23 +88,29 @@ WSGI_APPLICATION = 'xploreBot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'xplorebot',
+#         'USER':'root',
+#         'PASSWORD':'Iwin1tall2020.c0m',
+#         'HOST':'127.0.0.1',
+#         'PORT':'3306'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'xploreBot',
+        'NAME':'xplorebot',
         'USER':'root',
-        'PASSWORD':'Isandev2020.c0m',
+        'PASSWORD':'',
         'HOST':'127.0.0.1',
         'PORT':'3306'
     }
 }
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         'NAME': 'xploreBot',
-#     }
-# }
+
 # DATABASES['default'] =  dj_database_url.config()
 
 
@@ -143,55 +149,29 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "static"),
+# )
 
-STATIC_ROOT = os.path.join(BASE_DIR, "live-static", "static-root")
+# STATIC_ROOT = os.path.join(BASE_DIR, "live-static", "static-root")
 
-MEDIA_URL = "/media/"
+# MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "live-static", "media-root")
+# MEDIA_ROOT = os.path.join(BASE_DIR, "live-static", "media-root")
+# AWS S3 SETTINGS
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_URL = os.environ.get('AWS_URL')
+AWS_DEFAULT_ACL = None
+AWS_S3_REGION_NAME = 'us-east-1'
+STATIC_URL = AWS_URL + '/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = AWS_URL + '/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-
-if not DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, "static"),
-    )
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION = 'us-east-1'
-    AWS_S3_HOST = 's3.{}.amazonaws.com'.format(AWS_S3_REGION)
-    AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN')
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-
-    AWS_LOCATION = 'static'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-
-    DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
-    # Allow all host hosts/domain names for this site
-    ALLOWED_HOSTS = ['*']
-
-    # # # Parse database configuration from $DATABASE_URL
-
-    DATABASES = {'default': dj_database_url.config()}
-
-    # # # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# # # try to load local_settings.py if it exists
-if DEBUG:
-    try:
-        from .local_settings import *
-    except Exception as e:
-        pass
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
