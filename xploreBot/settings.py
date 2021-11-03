@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import dj_database_url
 import environ
+import django_heroku
 import xploreBot.storage_backends
 
 # Initialise environment variables
@@ -100,18 +101,18 @@ WSGI_APPLICATION = 'xploreBot.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'xplorebot',
-        'USER':'root',
-        'PASSWORD':'',
-        'HOST':'127.0.0.1',
-        'PORT':'3306'
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME':'xplorebot',
+    #     'USER':'root',
+    #     'PASSWORD':'',
+    #     'HOST':'127.0.0.1',
+    #     'PORT':'3306'
+    # }
 }
 
 
-# DATABASES['default'] =  dj_database_url.config()
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
@@ -182,3 +183,4 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+django_heroku.settigns(locals(), staticfiles=False)
