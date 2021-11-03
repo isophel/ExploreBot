@@ -6,4 +6,4 @@ __pycache__
 *.png
 db.sqlite3
 venv/
-xploreBot/*.env
+*.env
