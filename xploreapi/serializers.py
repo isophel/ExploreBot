@@ -64,5 +64,5 @@ class AnimalsSerializer(serializers.HyperlinkedModelSerializer):
 
 class ActivitiesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Activites
+        model = Activities
         fields = ('id', 'name', 'about', 'image', 'sight')
