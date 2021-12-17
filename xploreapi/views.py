@@ -2,9 +2,9 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import DestinationSerializer, \
     TourCompaniesSerializer, CarHireSerializer, HotelsSerializer, TourguidesSerializer, TweetsSerializer, \
-    FactsSerializer, TripsSerializer, updatesSerializer, AnimalsSerializer
+    FactsSerializer, TripsSerializer, updatesSerializer, AnimalsSerializer, ActivitiesSerializer
 
-from .models import Destinations, Trips, Tourguides, TourCompanies, Animals, Tweets, updates, CarHire, Hotels, Facts
+from .models import Destinations, Trips, Tourguides, TourCompanies, Animals, Tweets, updates, CarHire, Hotels, Facts, Activities
 
 
 # Create your views here.
@@ -56,3 +56,7 @@ class updatesViewSet(viewsets.ModelViewSet):
 class AnimalViewSet(viewsets.ModelViewSet):
     queryset = Animals.objects.all().order_by('name')
     serializer_class = AnimalsSerializer
+
+class ActivityViewSet(viewsets.ModelViewSet):
+    queryset = Activities.objects.all().order_by('name')
+    serializer_class = ActivitiesSerializer

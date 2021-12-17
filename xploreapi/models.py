@@ -113,14 +113,25 @@ class Trips(models.Model):
 
 
 class updates(models.Model):
+    image = models.ImageField(upload_to="images/")
     body = models.TextField()
     link = models.URLField()
     runya = models.TextField()
     luga = models.TextField()
     Date = models.DateField()
+    postedby= models.TextField()
 
     def __str__(self):
         return self.body
+
+class Activities(models.Model):
+    name = models.TextField()
+    about= models.TextField()
+    image = models.ImageField(upload_to="images/")
+    sight = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class Animals(models.Model):

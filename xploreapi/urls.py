@@ -14,6 +14,7 @@ router.register(r'animals',views.AnimalViewSet)
 router.register(r'tourcompanies',views.TourCompaniesViewSet)
 router.register(r'updates',views.updatesViewSet)
 router.register(r'carhire',views.CarHireViewSet)
+router.register(r'activities',views.ActivityViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),

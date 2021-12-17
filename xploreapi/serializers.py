@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Destinations, Trips, Tourguides, TourCompanies, Animals, Tweets, updates, CarHire, Hotels, Facts
+from .models import Destinations, Trips, Tourguides, TourCompanies, Animals, Tweets, updates, CarHire, Hotels, Facts, Activities
 
 
 class DestinationSerializer(serializers.HyperlinkedModelSerializer):
@@ -54,10 +54,15 @@ class TripsSerializer(serializers.HyperlinkedModelSerializer):
 class updatesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = updates
-        fields = ('id', 'body', 'link', 'runya', 'luga', 'Date')
+        fields = ('id', 'image','body', 'link', 'runya', 'luga', 'Date','postedby')
 
 
 class AnimalsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Animals
         fields = ('id', 'name', 'about', 'image', 'sightloc')
+
+class ActivitiesSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Activites
+        fields = ('id', 'name', 'about', 'image', 'sight')
